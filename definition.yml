@@ -1,6 +1,6 @@
 id: random
-docker_repository: dynverse/dynmethods:random
-container_url: https://github.com/dynverse/dynmethods/tree/master/containers/random
+docker_repository: dynverse/ti_random
+container_url: https://github.com/dynverse/ti_random
 name: 'Control: random'
 type: control
 platform: R
