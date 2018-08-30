@@ -1,7 +1,7 @@
 FROM dynverse/dynwrap:r
 
-LABEL version 0.1.0.1
+LABEL version 0.1.0
 
 ADD . /code
 
-ENTRYPOINT /code/run.sh
+ENTRYPOINT Rscript /code/run.R
