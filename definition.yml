@@ -1,5 +1,6 @@
 id: random
 docker_repository: dynverse/ti_random
+singularity_collection: 1572
 container_url: https://github.com/dynverse/ti_random
 name: 'Control: random'
 type: control
