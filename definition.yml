@@ -29,14 +29,3 @@ output:
   - trajectory
   - timings
 wrapper_type: control
-authors:
-- given: Robrecht
-  family: Cannoodt
-  email: rcannood@gmail.com
-  ORCID: 0000-0003-3641-729X
-  github: rcannood
-- given: Wouter
-  family: Saelens
-  email: wouter.saelens@ugent.be
-  ORCID: 0000-0002-7114-6248
-  github: zouter
