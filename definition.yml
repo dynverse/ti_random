@@ -28,4 +28,4 @@ output:
   outputs:
   - trajectory
   - timings
-wrapper_type: control
+wrapper_type: trajectory
