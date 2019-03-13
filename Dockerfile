@@ -1,7 +1,5 @@
-FROM dynverse/dynwrap:r
+FROM dynverse/dynwrapr:v0.1.0
 
-LABEL version 0.1.5
+COPY definition.yml run.R example.R /code/
 
-ADD . /code
-
-ENTRYPOINT Rscript /code/run.R
+ENTRYPOINT ["/code/run.R"]
