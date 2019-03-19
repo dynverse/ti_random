@@ -12,7 +12,7 @@ library(purrr, warn.conflicts = FALSE)
 ###           LOAD DATA           ###
 #####################################
 expression <- task$expression
-params <- task$params
+parameters <- task$parameters
 priors <- task$priors
 
 # TIMING: done with preproc
