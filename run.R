@@ -1,29 +1,35 @@
-library(jsonlite)
-library(readr)
-library(dplyr)
-library(purrr)
+#!/usr/local/bin/Rscript
 
-#   ____________________________________________________________________________
-#   Load data                                                               ####
+task <- dyncli::main()
 
-data <- read_rds("/ti/input/data.rds")
-params <- jsonlite::read_json("/ti/input/params.json")
+# load libraries
+library(dyncli, warn.conflicts = FALSE)
+library(dynwrap, warn.conflicts = FALSE)
+library(dplyr, warn.conflicts = FALSE)
+library(purrr, warn.conflicts = FALSE)
 
-counts <- data$counts
+#####################################
+###           LOAD DATA           ###
+#####################################
+expression <- task$expression
+parameters <- task$parameters
+priors <- task$priors
 
-#   ____________________________________________________________________________
-#   Infer trajectory                                                        ####
+# TIMING: done with preproc
+timings <- list(method_afterpreproc = Sys.time())
+
+#####################################
+###        INFER TRAJECTORY       ###
+#####################################
 
 num_milestones <- 15
 
 # generate network
 milestone_ids <- paste0("milestone_", seq_len(num_milestones))
 
-# TIMING: done with preproc
-checkpoints <- list(method_afterpreproc = as.numeric(Sys.time()))
-
 gr <- igraph::ba.game(num_milestones)
-milestone_network <- igraph::as_data_frame(gr) %>%
+milestone_network <-
+  igraph::as_data_frame(gr) %>%
   mutate(
     from = paste0("milestone_", from),
     to = paste0("milestone_", to),
@@ -32,7 +38,7 @@ milestone_network <- igraph::as_data_frame(gr) %>%
   )
 
 # put cells on random edges of network
-cell_ids <- rownames(counts)
+cell_ids <- rownames(expression)
 
 progressions <- data.frame(
   cell_id = cell_ids,
@@ -41,20 +47,24 @@ progressions <- data.frame(
   stringsAsFactors = FALSE
 )
 
-# TIMING: done with method
-checkpoints$method_aftermethod <- as.numeric(Sys.time())
+# TIMING: done with trajectory inference
+timings$method_aftermethod <- Sys.time()
 
-# return output
-output <- lst(
-  cell_ids = cell_ids,
-  milestone_ids = milestone_ids,
-  milestone_network = milestone_network,
-  progressions = progressions,
-  divergence_regions = NULL,
-  timings = checkpoints
-)
+#####################################
+###     SAVE OUTPUT TRAJECTORY    ###
+#####################################
+output <-
+  wrap_data(
+    cell_ids = rownames(expression)
+  ) %>%
+  add_trajectory(
+    milestone_ids = milestone_ids,
+    milestone_network = milestone_network,
+    progressions = progressions,
+    divergence_regions = NULL
+  ) %>%
+  add_timings(
+    timings = timings
+  )
 
-#   ____________________________________________________________________________
-#   Save output                                                             ####
-
-write_rds(output, "/ti/output/output.rds")
+dyncli::write_output(output, task$output)

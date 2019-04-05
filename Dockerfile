@@ -1,7 +1,7 @@
-FROM dynverse/dynwrap:r
+FROM dynverse/dynwrapr:v0.1.0
 
-LABEL version 0.1.5
+ARG GITHUB_PAT
 
-ADD . /code
+COPY definition.yml run.R example.sh /code/
 
-ENTRYPOINT Rscript /code/run.R
+ENTRYPOINT ["/code/run.R"]
